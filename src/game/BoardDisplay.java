@@ -23,7 +23,7 @@ public class BoardDisplay  extends JPanel implements ActionListener {
     ButtonGroup group;
     JLabel firstPlayer;
     JLabel secondPlayer;
-    JLabel time;
+    //JLabel time;
     int remainingTime;
 
     //constructors
@@ -40,7 +40,7 @@ public class BoardDisplay  extends JPanel implements ActionListener {
         initUI();
 
         add( gameGrid, BorderLayout.CENTER);
-        add( time, BorderLayout.NORTH);
+        //add( time, BorderLayout.NORTH);
         add( bottomInfo, BorderLayout.SOUTH);
 
         setPreferredSize
@@ -56,9 +56,9 @@ public class BoardDisplay  extends JPanel implements ActionListener {
      */
     public void initUI() {
         remainingTime = 30;
-        time = new JLabel( "" + remainingTime);
+        //time = new JLabel( "" + remainingTime);
 
-        timer = new Timer( 1000, this);
+        //timer = new Timer( 1000, this);
         //timer.start();
 
         gameGrid = new BoardCanvas( gameBoard);
@@ -112,7 +112,7 @@ public class BoardDisplay  extends JPanel implements ActionListener {
 //        }
 
         remainingTime--;
-        time.setText( "" + remainingTime);
+        //time.setText( "" + remainingTime);
 
     }
 

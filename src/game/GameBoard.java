@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameBoard {
-    private static Piece[][] board = {
+    static Piece[][] board = {
 
             {Piece.empty,Piece.white,Piece.white,Piece.empty,Piece.empty,Piece.black,Piece.black,Piece.empty},
             {Piece.empty,Piece.white,Piece.white,Piece.empty,Piece.empty,Piece.black,Piece.black,Piece.empty},
@@ -18,6 +18,7 @@ public class GameBoard {
             {Piece.empty,Piece.white,Piece.white,Piece.empty,Piece.empty,Piece.black,Piece.black,Piece.empty}
     };
 
+    AI opponent;
     boolean whiteTurn = true;
     Point selected;
     List<Point> highlighted = new ArrayList<>();
@@ -27,7 +28,12 @@ public class GameBoard {
 
 
     public GameBoard() {
+        opponent = new AI(this);
         System.out.println(calculateMoves());
+    }
+
+    public boolean isAITurn() {
+        return !whiteTurn;
     }
 
     public Piece getPiece(int x , int y) {
@@ -56,6 +62,35 @@ public class GameBoard {
 
             }
         }
+        return possibles.getUpdated();
+    }
+
+    // TODO: 21.02.2020 Fix Duplication
+    List<String> calculateMoves(Piece[][] useBoard) {
+        Piece[][] temp = board;
+        board = useBoard;
+
+        int direction;
+        if(whiteTurn) {
+            direction = 1;
+        }
+        else {
+            direction = -1;
+        }
+
+        MoveList possibles = new MoveList();
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                Piece piece = board[x][y];
+
+                if(turnCheck(piece)) {
+                    moveCheck(x, y, direction, possibles);
+                }
+
+            }
+        }
+
+        board = temp;
         return possibles.getUpdated();
     }
 
@@ -472,6 +507,10 @@ public class GameBoard {
                 selected = null;
                 highlighted = new ArrayList<>();
                 changeTurn();
+
+                opponent.play();
+
+                changeTurn();
             }
         }
         else if(!locked) {
@@ -493,7 +532,7 @@ public class GameBoard {
         }
     }
 
-    private void changeTurn() {
+    void changeTurn() {
         if(whiteTurn){
             whiteTurn = false;
         }
@@ -534,6 +573,67 @@ public class GameBoard {
             }
         }
         return false;
+    }
+
+    // TODO: 21.02.2020 Fix Duplication 
+    public void aiPlay(String move, Piece[][] useBoard, boolean black) {
+        Piece[][] temp = board;
+        board = useBoard;
+
+        System.out.println("Length is: " + move.length());
+        if(move.length() == 5) {
+            int x1 = move.charAt(0) - 'A';
+            int y1 = move.charAt(1) - '1';
+            int x2 = move.charAt(3) - 'A';
+            int y2 = move.charAt(4) - '1';
+
+            if(y2 == 0 && black) {
+                board[x2][y2] = Piece.BLACK;
+            }
+            else if(y2 == 7 && !black) {
+                board[x2][y2] = Piece.WHITE;
+            }
+            else {
+                board[x2][y2] = board[x1][y1];
+            }
+            board[x1][y1] = Piece.empty;
+            if(Math.abs(x2 - x1) > 1) {
+                int min, max;
+                if( x2 > x1) {
+                    max = x2;
+                    min = x1;
+                }
+                else {
+                    max = x1;
+                    min = x2;
+                }
+                for (int i= min + 1;i < max; i++) {
+                    board[i][y1] = Piece.empty;
+                }
+            }
+            else if(Math.abs(y2 - y1) > 1) {
+                int min, max;
+                if( y2 > y1) {
+                    max = y2;
+                    min = y1;
+                }
+                else {
+                    max = y1;
+                    min = y2;
+                }
+                for (int i = min + 1;i < max; i++) {
+                    board[x1][i] = Piece.empty;
+                }
+            }
+
+        }
+        else {
+            String[] composite = move.split("&");
+            for (String s : composite) {
+                aiPlay(s, useBoard, black);
+            }
+        }
+        board = temp;
     }
 
     public boolean isHighlighted(int x, int y) {

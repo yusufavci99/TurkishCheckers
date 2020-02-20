@@ -21,7 +21,7 @@ public class Main {
                 ( gameFrame, "Type First Player's Name");
 
         String secondPlayer = JOptionPane.showInputDialog
-                ( gameFrame, "Type Second Player's Name");
+                ( gameFrame, "Type AI's Name");
 
         gameFrame.add( new BoardDisplay( firstPlayer, secondPlayer, Game.getGame().getGameBoard()));
         gameFrame.setVisible( true);
