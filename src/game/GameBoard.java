@@ -440,6 +440,7 @@ public class GameBoard {
         return !last;
     }
 
+    // Maps nums 1 to 8 to letters A to H.
     public static char numToLetter(int number) {
         return (char)((int)'A' + number);
     }
@@ -483,7 +484,7 @@ public class GameBoard {
         return PlayResult.NO;
     }
 
-    public void select(Point clicked) {
+    public void select(Point clicked, BoardCanvas gameGrid) {
 
         PlayResult playResult = tryToPlay(clicked);
 
@@ -506,6 +507,7 @@ public class GameBoard {
                 }
                 selected = null;
                 highlighted = new ArrayList<>();
+                gameGrid.repaint();
                 changeTurn();
 
                 opponent.play();
@@ -580,7 +582,6 @@ public class GameBoard {
         Piece[][] temp = board;
         board = useBoard;
 
-        System.out.println("Length is: " + move.length());
         if(move.length() == 5) {
             int x1 = move.charAt(0) - 'A';
             int y1 = move.charAt(1) - '1';
