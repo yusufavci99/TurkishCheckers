@@ -171,7 +171,7 @@ public class BoardDisplay  extends JPanel implements ActionListener {
          * @param e mouse input
          */
         @Override
-        public void mouseClicked( MouseEvent e) {
+        public void mouseReleased( MouseEvent e) {
             int col;
             int row;
 
@@ -181,7 +181,7 @@ public class BoardDisplay  extends JPanel implements ActionListener {
             System.out.println("X: " + col);
             System.out.println("Y: " + row);
 
-            gameBoard.select(new Point(col, row));
+            gameBoard.select(new Point(col, row), gameGrid);
 
             toggleColor(gameBoard.whiteTurn);
 
@@ -189,5 +189,6 @@ public class BoardDisplay  extends JPanel implements ActionListener {
             checkGameWin();
 
         }
+
     }
 }
